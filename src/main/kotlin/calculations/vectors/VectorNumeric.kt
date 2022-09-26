@@ -1,5 +1,6 @@
 package calculations.vectors
 
+import calculations.parallel.Parallel
 import java.lang.IllegalArgumentException
 import java.util.Random
 
@@ -16,7 +17,7 @@ class VectorNumeric (val size: Int){
             this[it] = inputData[it]
         }
     }
-    
+
     constructor(inputData: List<Double>) : this(inputData.size){
         repeat(inputData.size){
             this[it] = inputData[it]
@@ -31,11 +32,17 @@ class VectorNumeric (val size: Int){
 
     operator fun plus(other: VectorNumeric) : VectorNumeric{
         if(size != other.size) throw IllegalArgumentException("sizes are not equal")
-        return VectorNumeric(size).apply {
+        return VectorNumeric(size).let {that ->
             repeat(size){
-                this[it] = this@VectorNumeric[it] + other[it]
+                that[it] = this[it] + other[it]
             }
+            that
         }
+    }
+
+    fun parallelPlus(other: VectorNumeric) : VectorNumeric{
+        if(size != other.size) throw IllegalArgumentException("sizes are not equal")
+        TODO("Реализовать параллельное сложение векторов")
     }
 
     operator fun minus(other: VectorNumeric) : VectorNumeric{
