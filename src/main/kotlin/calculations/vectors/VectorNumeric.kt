@@ -42,15 +42,21 @@ class VectorNumeric (val size: Int){
 
     fun parallelPlus(other: VectorNumeric) : VectorNumeric{
         if(size != other.size) throw IllegalArgumentException("sizes are not equal")
-        TODO("Реализовать параллельное сложение векторов")
+        val result = VectorNumeric(size)
+        val state = Parallel.parallelFor(0, size){i, l ->
+            result[i] = this[i] + other[i]
+        }
+        state.waitResult()
+        return result
     }
 
     operator fun minus(other: VectorNumeric) : VectorNumeric{
         if(size != other.size) throw IllegalArgumentException("sizes are not equal")
-        return VectorNumeric(size).apply {
+        return VectorNumeric(size).let {that ->
             repeat(size){
-                this[it] = this@VectorNumeric[it] - other[it]
+                that[it] = this[it] + other[it]
             }
+            that
         }
     }
 
