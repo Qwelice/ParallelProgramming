@@ -43,7 +43,7 @@ class VectorNumeric (val size: Int){
     fun parallelPlus(other: VectorNumeric) : VectorNumeric{
         if(size != other.size) throw IllegalArgumentException("sizes are not equal")
         val result = VectorNumeric(size)
-        val state = Parallel.parallelFor(0, size){i, l ->
+        val state = Parallel.parallelFor(0, size){ i, _ ->
             result[i] = this[i] + other[i]
         }
         state.waitResult()
