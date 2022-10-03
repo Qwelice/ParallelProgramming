@@ -69,6 +69,15 @@ class VectorNumeric (val size: Int){
         }
     }
 
+    fun scalarTimes(other: VectorNumeric) : Double{
+        if(size != other.size) throw IllegalArgumentException("sizes are not equal")
+        var result = 0.0
+        for(i in 0 until size){
+            result += this[i] * other[i]
+        }
+        return result
+    }
+
     override fun toString(): String = StringBuilder().apply {
         repeat(size){
             append("${this@VectorNumeric[it]} ")
