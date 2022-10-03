@@ -12,5 +12,20 @@ class Parallel {
             pLoop.start()
             return pLoop.state
         }
+
+        fun <T> parallelReduce(collection: List<T>, accumulator: (T, T) -> T) : ParallelLoopState{
+            val pLoop = ParallelLoop()
+            if(collection.size >= 2){
+                pLoop.constructLoop(0, collection.size){i, l ->
+                    if(l.accumulator == null){
+                        l.accumulator = collection[i]
+                    } else{
+                        l.accumulator = accumulator(l.accumulator as T, collection[i])
+                    }
+                }
+                pLoop.start()
+            }
+            return pLoop.state
+        }
     }
 }
