@@ -1,6 +1,7 @@
 package calculations.parallel.loops
 
 class Loop(private val startInclusive: Int, private val endExclusive: Int, private val action: (Int, Loop) -> Unit) : Thread() {
+    var accumulator: Any? = null
     val currentIteration: Int
         get() = _iteration
     val totalIterations: Int

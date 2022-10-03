@@ -9,4 +9,12 @@ class ParallelLoopState(private val parallelLoop: ParallelLoop) {
         parallelLoop.join()
         return this
     }
+
+    fun getAccumulatedResult() : List<Any> = mutableListOf<Any>().apply {
+        parallelLoop.loops.forEach {
+            if(it.isCompleted && it.accumulator != null){
+                this.add(it.accumulator!!)
+            }
+        }
+    }
 }

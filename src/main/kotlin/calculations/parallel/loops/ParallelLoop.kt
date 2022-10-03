@@ -3,6 +3,7 @@ package calculations.parallel.loops
 import java.lang.IllegalArgumentException
 
 class ParallelLoop {
+    private val _loops = mutableListOf<Loop>()
     val loops: List<Loop>
         get() = _loops
     val state = ParallelLoopState(this)
@@ -20,7 +21,6 @@ class ParallelLoop {
             loops.forEach { if(it.isExecuting) executing ++ }
             return executing > 0
         }
-    private val _loops = mutableListOf<Loop>()
     private var _isStarted = false
 
     fun constructLoop(startInclusive: Int, endExclusive: Int, action: (Int, Loop) -> Unit) : ParallelLoopState{

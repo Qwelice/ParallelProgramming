@@ -1,5 +1,6 @@
 package calculations.vectors
 
+import calculations.CustomPair
 import calculations.parallel.Parallel
 import java.lang.IllegalArgumentException
 import java.util.Random
@@ -43,10 +44,18 @@ class VectorNumeric (val size: Int){
     fun parallelPlus(other: VectorNumeric) : VectorNumeric{
         if(size != other.size) throw IllegalArgumentException("sizes are not equal")
         val result = VectorNumeric(size)
-        val state = Parallel.parallelFor(0, size){ i, _ ->
-            result[i] = this[i] + other[i]
+        val state = Parallel.parallelFor(0, size){ i, l ->
+            if(l.accumulator == null){
+                l.accumulator = mutableListOf<CustomPair<Int, Double>>()
+            }
+            (l.accumulator as MutableList<CustomPair<Int, Double>>).add(CustomPair(i, this[i] + other[i]))
         }
         state.waitResult()
+        state.getAccumulatedResult().forEach {
+            (it as List<CustomPair<Int, Double>>).forEach {that ->
+                result[that.first] = that.second
+            }
+        }
         return result
     }
 
