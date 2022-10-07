@@ -3,6 +3,11 @@ package calculations.parallel.loops
 import java.lang.IllegalArgumentException
 
 class ParallelLoop {
+
+    companion object{
+        private val PROCESSORS_COUNT = Runtime.getRuntime().availableProcessors()
+        private val isParallelAvailable = PROCESSORS_COUNT > 1
+    }
     private val _loops = mutableListOf<Loop>()
     val loops: List<Loop>
         get() = _loops
@@ -26,15 +31,14 @@ class ParallelLoop {
     fun constructLoop(startInclusive: Int, endExclusive: Int, action: (Int, Loop) -> Unit) : ParallelLoopState{
         val steps = endExclusive - startInclusive
         if(steps <= 0) throw IllegalArgumentException("wrong diapason")
-        val pCount = Runtime.getRuntime().availableProcessors()
-        val ds = steps / pCount
-        val residual = steps % pCount
-        val tCount = if(ds == 0) residual else pCount
+        val ds = steps / PROCESSORS_COUNT
+        val residual = steps % PROCESSORS_COUNT
+        val tCount = if(ds == 0) residual else PROCESSORS_COUNT
         val s = steps / tCount
         repeat(tCount){
             appendLoop(
                 Loop(it * s + startInclusive,
-                    (it + 1) * s + startInclusive + if(it == pCount - 1) residual else 0,
+                    (it + 1) * s + startInclusive + if(it == PROCESSORS_COUNT - 1) residual else 0,
                     action)
             )
         }
